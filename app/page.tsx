@@ -27,7 +27,7 @@ export default async function Home() {
   const totalDinero = ventasCrias?.reduce((acc, v) => acc + (Number(v.precio_venta) || 0), 0) || 0;
 
   return (
-    <main className="p-4 bg-gray-50 min-h-screen">
+    <main className="p-4 bg-gray-50 min-h-screen pb-12">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-black text-green-800 tracking-tighter uppercase italic">Ganadería Control</h1>
         <div className="bg-yellow-100 px-3 py-1 rounded-full border border-yellow-200">
@@ -53,7 +53,7 @@ export default async function Home() {
       {/* SECCIÓN DE NAVEGACIÓN */}
       <div className="flex flex-col gap-3">
         
-        {/* NUEVO: CONTABILIDAD / VENTAS (Botón Destacado) */}
+        {/* CONTABILIDAD / VENTAS */}
         <Link href="/ventas" className="bg-gray-900 p-6 rounded-[35px] shadow-xl flex items-center justify-between hover:scale-[1.02] transition-all active:scale-95">
           <div className="flex items-center gap-4">
             <span className="text-4xl">💰</span>
@@ -77,19 +77,30 @@ export default async function Home() {
           <span className="text-2xl text-green-500 font-black">→</span>
         </Link>
 
+        {/* CENSOS (Botones cuadrados) */}
         <div className="grid grid-cols-2 gap-3">
-          {/* CENSO DE CRÍAS */}
           <Link href="/crias" className="bg-blue-50 p-5 rounded-[30px] border border-blue-100 flex flex-col gap-2 active:scale-95 transition-all">
             <span className="text-3xl">📋</span>
             <h2 className="font-black text-blue-900 leading-none">Censo<br/>Crías</h2>
           </Link>
 
-          {/* CENSO DE MADRES */}
           <Link href="/madres" className="bg-green-50 p-5 rounded-[30px] border border-green-100 flex flex-col gap-2 active:scale-95 transition-all">
             <span className="text-3xl">🧾</span>
             <h2 className="font-black text-green-900 leading-none">Censo<br/>Madres</h2>
           </Link>
         </div>
+
+        {/* NUEVO: RANKING Y RENTABILIDAD */}
+        <Link href="/rendimiento" className="bg-yellow-50 p-6 rounded-[30px] shadow-sm border border-yellow-100 flex items-center justify-between active:scale-95 transition-all mt-1">
+          <div className="flex items-center gap-4">
+            <span className="text-4xl">🏆</span>
+            <div>
+              <h2 className="font-black text-lg text-yellow-900 tracking-tight">Ranking de Madres</h2>
+              <p className="text-[10px] text-yellow-700 font-black uppercase tracking-widest">Rentabilidad y Desvieje</p>
+            </div>
+          </div>
+          <span className="text-2xl text-yellow-500 font-black">→</span>
+        </Link>
 
         {/* REGISTRAR INCIDENCIA */}
         <Link href="/incidencias/nueva" className="bg-white p-6 rounded-[30px] shadow-sm border border-gray-100 flex items-center justify-between active:scale-95 transition-all mb-10">
@@ -100,7 +111,7 @@ export default async function Home() {
               <p className="text-xs text-gray-500 font-bold uppercase">Bajas y tratamientos</p>
             </div>
           </div>
-          <span className="text-2xl text-red-500 font-black">→</span>
+          <span className="text-2xl text-red-500 font-black"> </span>
         </Link>
 
       </div>
