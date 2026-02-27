@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic"; // <--- ESTA ES LA LÍNEA MÁGICA QUE OBLIGA A ACTUALIZAR EN TIEMPO REAL
+
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 
@@ -12,7 +14,7 @@ export default async function Home() {
     .select('*', { count: 'exact', head: true })
     .eq('estado', 'Activa');
 
-  // 2. CONSULTA DE CRÍAS
+  // 2. CONSULTA DE CRÍAS (Las que no tienen destino asignado aún)
   const { count: totalCrias } = await supabase
     .from('crias')
     .select('*', { count: 'exact', head: true })
@@ -24,6 +26,7 @@ export default async function Home() {
     .select('precio_venta')
     .not('precio_venta', 'is', null);
 
+  // Sumamos todos los precios de venta
   const totalDinero = ventasCrias?.reduce((acc, v) => acc + (Number(v.precio_venta) || 0), 0) || 0;
 
   return (
@@ -31,7 +34,7 @@ export default async function Home() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-black text-green-800 tracking-tighter uppercase italic">Ganadería Control</h1>
         <div className="bg-yellow-100 px-3 py-1 rounded-full border border-yellow-200">
-           <span className="text-[10px] font-black text-yellow-700 uppercase">Balance: {totalDinero.toLocaleString()}€</span>
+           <span className="text-[10px] font-black text-yellow-700 uppercase">Balance: {totalDinero.toLocaleString('es-ES')}€</span>
         </div>
       </div>
       
@@ -59,7 +62,7 @@ export default async function Home() {
             <span className="text-4xl">💰</span>
             <div>
               <h2 className="font-black text-lg text-white tracking-tight">Ventas y Ganancias</h2>
-              <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">Total: {totalDinero.toLocaleString()} €</p>
+              <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">Total: {totalDinero.toLocaleString('es-ES')} €</p>
             </div>
           </div>
           <span className="text-2xl text-yellow-500 font-black">→</span>
@@ -90,7 +93,7 @@ export default async function Home() {
           </Link>
         </div>
 
-        {/* NUEVO: RANKING Y RENTABILIDAD */}
+        {/* RANKING Y RENTABILIDAD */}
         <Link href="/rendimiento" className="bg-yellow-50 p-6 rounded-[30px] shadow-sm border border-yellow-100 flex items-center justify-between active:scale-95 transition-all mt-1">
           <div className="flex items-center gap-4">
             <span className="text-4xl">🏆</span>
@@ -111,7 +114,7 @@ export default async function Home() {
               <p className="text-xs text-gray-500 font-bold uppercase">Bajas y tratamientos</p>
             </div>
           </div>
-          <span className="text-2xl text-red-500 font-black"> </span>
+          <span className="text-2xl text-red-500 font-black">→</span>
         </Link>
 
       </div>

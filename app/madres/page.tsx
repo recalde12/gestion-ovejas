@@ -31,14 +31,18 @@ export default function CensoMadres() {
       // 3. Cargamos todas las crías
       const { data: dataCrias } = await supabase.from("crias").select("id_madre_vinculada");
 
-      // 4. Procesamos Datos con los nombres de columna correctos
+      // 4. Procesamos Datos
       const madresCompletas = (dataMadres || []).map(madre => {
         const misIncidencias = (dataInc || []).filter(inc => inc.id_madre_vinculada === madre.id);
         const misPartos = (dataCrias || []).filter(cria => cria.id_madre_vinculada === madre.id).length;
         
-        // Usamos fecha_nacimiento
-        const fechaNac = madre.fecha_nacimiento;
-        const anioMostrado = fechaNac ? new Date(fechaNac).getFullYear() : (madre.ano_nacimiento || "S/F");
+        // CORRECCIÓN: Formateamos la fecha completa (Día/Mes/Año)
+        let fechaMostrada = "S/F"; // Sin fecha por defecto
+        if (madre.fecha_nacimiento) {
+          fechaMostrada = new Date(madre.fecha_nacimiento).toLocaleDateString('es-ES');
+        } else if (madre.ano_nacimiento) {
+          fechaMostrada = madre.ano_nacimiento.toString(); // Por si hay ovejas antiguas de las que solo sabemos el año
+        }
 
         // Metemos el tipo_incidencia en el saco de búsqueda
         const textoParaBusqueda = `
@@ -50,7 +54,7 @@ export default function CensoMadres() {
 
         return {
           ...madre,
-          anioParaMostrar: anioMostrado,
+          fechaParaMostrar: fechaMostrada,
           listaIncidencias: misIncidencias,
           totalPartos: misPartos,
           textoBusqueda: textoParaBusqueda
@@ -72,10 +76,8 @@ export default function CensoMadres() {
     
     if (query) {
       let tempQuery = query;
-      // Normalización para que "esponjas" encuentre "esponja"
       if (tempQuery.endsWith('s') && tempQuery.length > 4) tempQuery = tempQuery.slice(0, -1);
       
-      // Búsqueda por número de partos
       if (!isNaN(Number(tempQuery)) && tempQuery.length === 1) {
         cumpleTexto = m.totalPartos === Number(tempQuery);
       } else {
@@ -87,13 +89,11 @@ export default function CensoMadres() {
     let cumpleFecha = true;
     if (fechaInicio || fechaFin) {
       if (m.fecha_nacimiento) {
-        // Extraemos solo la parte YYYY-MM-DD para evitar fallos por horas
         const fechaMadre = m.fecha_nacimiento.split('T')[0];
         if (fechaInicio && fechaFin) cumpleFecha = fechaMadre >= fechaInicio && fechaMadre <= fechaFin;
         else if (fechaInicio) cumpleFecha = fechaMadre >= fechaInicio;
         else if (fechaFin) cumpleFecha = fechaMadre <= fechaFin;
       } else {
-        // Si hay un filtro de fecha activo pero la oveja no tiene fecha de nacimiento registrada, la ocultamos
         cumpleFecha = false; 
       }
     }
@@ -189,19 +189,19 @@ export default function CensoMadres() {
               <div className="grid grid-cols-3 gap-3 mb-8">
                 <div className="bg-gray-50 p-4 rounded-3xl text-center">
                   <p className="text-[8px] font-black text-gray-400 uppercase mb-1 tracking-widest">Raza</p>
-                  <p className="text-xs font-bold text-gray-800">{madre.raza || 'ASSAFF'}</p>
+                  <p className="text-[11px] font-bold text-gray-800">{madre.raza || 'ASSAFF'}</p>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-3xl text-center">
-                  <p className="text-[8px] font-black text-gray-400 uppercase mb-1 tracking-widest">Año Nac.</p>
-                  <p className="text-xs font-bold text-gray-800">{madre.anioParaMostrar}</p>
+                  <p className="text-[8px] font-black text-gray-400 uppercase mb-1 tracking-widest">Nacimiento</p>
+                  <p className="text-[11px] font-bold text-gray-800">{madre.fechaParaMostrar}</p>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-3xl text-center">
                   <p className="text-[8px] font-black text-gray-400 uppercase mb-1 tracking-widest">Ubicación</p>
-                  <p className="text-xs font-bold text-gray-800 truncate">{madre.ubicacion || 'Finca'}</p>
+                  <p className="text-[11px] font-bold text-gray-800 truncate">{madre.ubicacion || 'Finca'}</p>
                 </div>
               </div>
 
-              {/* LISTA DE INCIDENCIAS (tipo_incidencia) */}
+              {/* LISTA DE INCIDENCIAS */}
               <div className="space-y-3">
                 <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1 italic">Historial de Incidencias</p>
                 
