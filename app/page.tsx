@@ -106,7 +106,7 @@ export default async function Home() {
         </Link>
 
         {/* REGISTRAR INCIDENCIA */}
-        <Link href="/incidencias/nueva" className="bg-white p-6 rounded-[30px] shadow-sm border border-gray-100 flex items-center justify-between active:scale-95 transition-all mb-10">
+        <Link href="/incidencias/" className="bg-white p-6 rounded-[30px] shadow-sm border border-gray-100 flex items-center justify-between active:scale-95 transition-all mb-10">
           <div className="flex items-center gap-4">
             <span className="text-4xl">⚠️</span>
             <div>
