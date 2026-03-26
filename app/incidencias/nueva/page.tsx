@@ -17,7 +17,7 @@ export default function NuevaIncidencia() {
   const [observaciones, setObservaciones] = useState("");
 
   // Tipos de incidencia comunes
-  const tiposComunes = ["BAJA", "VENTA", "MUERTA", "MAMIA", "VIEJA", "ESPONJA", "VACUNA"];
+  const tiposComunes = ["BAJA", "VENTA", "MUERTA", "MAMIA", "VIEJA", "ESPONJAS", "VACUNA"];
 
   // Buscar la oveja por crotal mientras escribes
   useEffect(() => {
